@@ -4,21 +4,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
-// Trieda reprezentujúca hlavné GUI hry Piškvorky
+// Class:  Main Gui Of TicTacToe
 public class TicTacToeGUI extends JFrame implements ActionListener {
-    private char currentPlayer = 'X'; // Aktuálny hráč, začína hráč X
-    private JButton[][] buttons; // Pole tlačidiel pre hraciu plochu
-    private JPanel panel = new JPanel(); // Panel pre hraciu plochu
-    private int boardSize; // Veľkosť hracej plochy (boardSize x boardSize)
-    private String playerXName; // Meno hráča X
-    private String playerOName; // Meno hráča O
-    private boolean vsComputer; // Určuje, či hráč hraje proti PC
-    private JLabel statusLabel = new JLabel(); // Label pre stav hry (kto je na ťahu)
-    private JLabel timeLabel = new JLabel(); // Label pre časový limit hry
-    private int gameTime = 300; // Časový limit hry (v sekundách)
-    private Timer timer; // Časovač hry
+    private char currentPlayer = 'X';
+    private JButton[][] buttons;
+    private JPanel panel = new JPanel();
+    private int boardSize;
+    private String playerXName;
+    private String playerOName;
+    private boolean vsComputer;
+    private JLabel statusLabel = new JLabel();
+    private JLabel timeLabel = new JLabel();
+    private int gameTime = 300;
+    private Timer timer;
 
-    // Konštruktor
+    // Constructor
     public TicTacToeGUI(int size, String playerXName, String playerOName, boolean vsComputer)
     {
         this.boardSize = size;
@@ -46,16 +46,16 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         newGameButton.addActionListener(e -> newGame());
         controlPanel.add(newGameButton);
 
-        controlPanel.add(statusLabel); // Statusový label (kto je na ťahu)
-        controlPanel.add(timeLabel); // Časový label
+        controlPanel.add(statusLabel); // status label
+        controlPanel.add(timeLabel); // Time label
         add(controlPanel, BorderLayout.NORTH);
 
-        updateStatusLabel(); // Aktualizácia statusového labelu
-        startTimer(); // Spustenie časovača
+        updateStatusLabel();
+        startTimer();
         setVisible(true);
     }
 
-    // Inicializácia hracej plochy
+    //Board Inicialize
     private void initializeBoard() {
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -71,14 +71,14 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         }
     }
 
-    // Akcia po stlačení tlačidla
+    // Action after click button
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton buttonClicked = (JButton) e.getSource();
         if (buttonClicked.getText().equals("")) {
             buttonClicked.setText(String.valueOf(currentPlayer));
-            buttonClicked.setForeground(currentPlayer == 'X' ? Color.RED : Color.CYAN);  // Nastavenie farby textu pre X a O
-            buttonClicked.setBackground(currentPlayer == 'X' ? Color.DARK_GRAY : Color.DARK_GRAY);    // Zmena farby pozadia po kliknutí
+            buttonClicked.setForeground(currentPlayer == 'X' ? Color.RED : Color.CYAN);  // Color set for X a O
+            buttonClicked.setBackground(currentPlayer == 'X' ? Color.DARK_GRAY : Color.DARK_GRAY);    // Color change after click
             if (checkWin()) {
                 JOptionPane.showMessageDialog(this, "Vyhral hráč :  " + getCurrentPlayerName());
                 endGame();
@@ -95,12 +95,12 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         }
     }
 
-    // Prepnutie hráča
+    // Switch Player
     private void switchPlayer() {
         currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
     }
 
-    // Ťah počítača
+    // PC
     private void computerMove() {
         Random rand = new Random();
         int i, j;
@@ -111,10 +111,10 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
 
         buttons[i][j].setText(String.valueOf(currentPlayer));
         if (checkWin()) {
-            JOptionPane.showMessageDialog(this, "Player " + getCurrentPlayerName() + " wins!");
+            JOptionPane.showMessageDialog(this, "Vyhral hráč :  " + getCurrentPlayerName() );
             endGame();
         } else if (isBoardFull()) {
-            JOptionPane.showMessageDialog(this, "The game is a tie!");
+            JOptionPane.showMessageDialog(this, "Nikto nevyhral, skús znova!");
             endGame();
         } else {
             switchPlayer();
@@ -122,7 +122,7 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         }
     }
 
-    // Kontrola výhry
+    // Check Win
     private boolean checkWin() {
         for (int i = 0; i < boardSize; i++) {
             if (checkRow(i) || checkColumn(i)) {
@@ -132,7 +132,6 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         return checkDiagonals();
     }
 
-    // Kontrola výhry v riadku
     private boolean checkRow(int row) {
         for (int i = 1; i < boardSize; i++) {
             if (!buttons[row][i].getText().equals(buttons[row][0].getText()) || buttons[row][i].getText().equals("")) {
@@ -142,7 +141,6 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         return true;
     }
 
-    // Kontrola výhry v stĺpci
     private boolean checkColumn(int col) {
         for (int i = 1; i < boardSize; i++) {
             if (!buttons[i][col].getText().equals(buttons[0][col].getText()) || buttons[i][col].getText().equals("")) {
@@ -152,7 +150,6 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         return true;
     }
 
-    // Kontrola výhry na diagonálach
     private boolean checkDiagonals() {
         boolean diagonal1 = true;
         boolean diagonal2 = true;
@@ -168,7 +165,7 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         return diagonal1 || diagonal2;
     }
 
-    // Kontrola, či je hracia plocha plná (remíza)
+    // check draw
     private boolean isBoardFull() {
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -180,7 +177,7 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         return true;
     }
 
-    // Resetovanie hracej plochy
+    // Reset
     private void resetBoard() {
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
@@ -191,28 +188,28 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         updateStatusLabel();
     }
 
-    // Začatie novej hry
+    // New game
     private void newGame() {
         this.dispose();
         SwingUtilities.invokeLater(InitialFrame::new);
     }
 
-    // Získanie mena aktuálneho hráča
+
     private String getCurrentPlayerName() {
         return (currentPlayer == 'X') ? playerXName : playerOName;
     }
 
-    // Aktualizácia stavového labelu
+
     private void updateStatusLabel() {
         statusLabel.setText("Na ťahu je: " + getCurrentPlayerName());
     }
 
-    // Spustenie časovača
+
     private void startTimer() {
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameTime--; // Zníženie času o 1 sekundu
+                gameTime--;
                 if (gameTime < 0) {
                     timer.stop();
                     JOptionPane.showMessageDialog(TicTacToeGUI.this, "Čas vypršal. Koniec hry!");
@@ -227,13 +224,13 @@ public class TicTacToeGUI extends JFrame implements ActionListener {
         timer.start();
     }
 
-    // Ukončenie hry
+    // End Game
     private void endGame() {
         timer.stop();
-        timeLabel.setText("Čas: 00:00"); // Zobrazenie konečného času
+        timeLabel.setText("Čas: 00:00");
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                buttons[i][j].setEnabled(false); // Deaktivácia tlačidiel po skončení hry
+                buttons[i][j].setEnabled(false); // Deactivate buttons afer game
             }
         }
     }
